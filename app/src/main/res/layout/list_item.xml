@@ -1,0 +1,30 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+	android:padding="20dp">
+
+    <TextView
+        android:id="@+id/list_item_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/list_item_check_button"
+        android:gravity="left"
+		android:textSize="18sp"
+		android:textColor="@color/colorAccent"
+		android:layout_centerVertical="true"
+		android:textStyle="bold"
+		android:paddingLeft="10dp"/>
+
+    <RadioButton
+        android:id="@+id/list_item_check_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+		android:background="@drawable/radio_button"
+		android:button="@android:color/transparent"
+        android:checked="false"
+        android:clickable="false"
+        android:focusable="false" 
+		android:paddingRight="10dp"/>
+
+</RelativeLayout>
