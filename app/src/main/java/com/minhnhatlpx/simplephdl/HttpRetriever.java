@@ -29,11 +29,14 @@ import java.net.CookieManager;
 import java.net.HttpCookie;
 import java.util.Map;
 import java.util.List;
+import android.util.*;
+import android.text.*;
 
 public class HttpRetriever {
 
 	static final String COOKIES_HEADER = "Set-Cookie";
 	static final String COOKIE = "Cookie";
+	static final String USER_AGENT = "Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.88 Mobile Safari/537.36";
 	static CookieManager cookieManager = new CookieManager();
 	
 	
@@ -50,14 +53,14 @@ public class HttpRetriever {
             urlConnection = (HttpURLConnection) targetURL.openConnection();
             urlConnection.setRequestMethod("GET");
 			urlConnection.setRequestProperty("Accept-Encoding", "gzip");
-            urlConnection.setDoInput(true);
-            urlConnection.connect();
+            urlConnection.setRequestProperty("User-Agent", USER_AGENT);
+      
 			
 			if (cookieManager.getCookieStore().getCookies().size() > 0) {
 				urlConnection.setRequestProperty(COOKIE ,
-		        cookieManager.getCookieStore().getCookies().toString().replaceAll(",",";"));
+		        TextUtils.join(";", cookieManager.getCookieStore().getCookies()));
 			}
-			
+			Log.i("Cookie",TextUtils.join(";", cookieManager.getCookieStore().getCookies()));
 			Map<String, List<String>> headerFields = urlConnection.getHeaderFields();
 			List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
 			if (cookiesHeader != null) {

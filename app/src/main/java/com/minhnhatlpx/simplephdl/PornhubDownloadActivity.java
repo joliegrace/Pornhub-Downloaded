@@ -35,7 +35,7 @@ public class PornhubDownloadActivity extends Activity
 	private AlertDialog dialog;
 	private View dialogView;
 	
-	private List<Pornhub> pornhubList = new ArrayList<>();
+	private List<General> pornhubList = new ArrayList<>();
 	private SingleAdapter adapter;
 	
     @Override
@@ -127,6 +127,9 @@ public class PornhubDownloadActivity extends Activity
 			{
 				final String html = HttpRetriever.retrieve(PORNHUB_URL);
 				
+				pornhubList = PornhubParser.getGeneralList(html);
+				
+				
 				if(html!=null)
 				{
 					handler.post(new Runnable()
@@ -135,7 +138,7 @@ public class PornhubDownloadActivity extends Activity
 						@Override
 						public void run()
 						{
-						    Parsing(html);
+						    listView();
 						}
 							
 						
@@ -161,20 +164,11 @@ public class PornhubDownloadActivity extends Activity
 		}.start();
 	}
 	
-	//Parsing
-	private void Parsing(String html)
-	{
-		JSONArray jsonArray = PornhubParser.getJsonArray(html);
-		
-		listView(PornhubParser.getList(jsonArray));
-		
-	}
 	
-	private void listView(List<Pornhub> list)
+	private void listView()
 	{
-		pornhubList = list;
 		
-		if(list.size() <=0)
+		if(pornhubList.size() <=0)
 		{
 			MyUtils.showToast(this, "No content for download !");
 			finish();
@@ -258,7 +252,7 @@ public class PornhubDownloadActivity extends Activity
 	
 	private void Download()
 	{
-		String url = pornhubList.get(ITEM_POSITION).getUrl();
+		String url = pornhubList.get(ITEM_POSITION).getVideoUrl();
 	
 		Uri uri = Uri.parse(url);
 	

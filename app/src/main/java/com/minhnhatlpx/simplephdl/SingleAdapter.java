@@ -17,10 +17,10 @@ import android.text.*;
 public class SingleAdapter extends BaseAdapter implements SelectedIndex {
 
     private final Context mContext;
-    private List<Pornhub> mList = new ArrayList<>();
+    private List<General> mList = new ArrayList<>();
     private int mSelectedIndex = -1;
 
-	public SingleAdapter(Context mContext, List<Pornhub> mList)
+	public SingleAdapter(Context mContext, List<General> mList)
 	{
 		this.mContext = mContext;
 		this.mList = mList;
@@ -70,7 +70,7 @@ public class SingleAdapter extends BaseAdapter implements SelectedIndex {
 
         ViewHolder holder = (ViewHolder) rowView.getTag();
 		
-		if(TextUtils.isEmpty(mList.get(position).getUrl()))
+		if(TextUtils.isEmpty(mList.get(position).getVideoUrl()))
 		{
 			holder.mTextView.setAlpha(0.5f);
 			holder.mRadioButton.setAlpha(0.5f);
@@ -80,7 +80,7 @@ public class SingleAdapter extends BaseAdapter implements SelectedIndex {
 			holder.mRadioButton.setAlpha(1);
 		}
 		
-		holder.mTextView.setText(mList.get(position).getText());
+		holder.mTextView.setText(mList.get(position).getQuality());
 		
 		if (mSelectedIndex == position) {
 			holder.mRadioButton.setChecked(true);
@@ -96,7 +96,7 @@ public class SingleAdapter extends BaseAdapter implements SelectedIndex {
 	@Override
 	public boolean isEnabled(int position)
 	{
-		if(TextUtils.isEmpty(mList.get(position).getUrl()))
+		if(TextUtils.isEmpty(mList.get(position).getVideoUrl()))
 		{
 			return false;
 		}
