@@ -24,10 +24,19 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.zip.*;
+import java.util.zip.GZIPInputStream;
+import java.net.CookieManager;
+import java.net.HttpCookie;
+import java.util.Map;
+import java.util.List;
 
 public class HttpRetriever {
 
+	static final String COOKIES_HEADER = "Set-Cookie";
+	static final String COOKIE = "Cookie";
+	static CookieManager cookieManager = new CookieManager();
+	
+	
     public static String retrieve(String url) {
         URL targetURL;
         try {
@@ -43,6 +52,20 @@ public class HttpRetriever {
 			urlConnection.setRequestProperty("Accept-Encoding", "gzip");
             urlConnection.setDoInput(true);
             urlConnection.connect();
+			
+			if (cookieManager.getCookieStore().getCookies().size() > 0) {
+				urlConnection.setRequestProperty(COOKIE ,
+		        cookieManager.getCookieStore().getCookies().toString().replaceAll(",",";"));
+			}
+			
+			Map<String, List<String>> headerFields = urlConnection.getHeaderFields();
+			List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
+			if (cookiesHeader != null) {
+				for (String cookie : cookiesHeader) {
+					cookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
+				}
+			}
+			
             response = readStream(urlConnection);
         } catch (IOException e) {
             return null;
