@@ -1,7 +1,7 @@
 # A simple android app for downloading videos on pornhub.
 -with freemium/non-login user can only download maximum 1080 quality.
 
--this app very light weight (39,94 KB)
+-this app very light weight (Under 100KB)
 
 •demo :
 
