@@ -59,7 +59,6 @@ public class SingleAdapter extends BaseAdapter implements SelectedIndex {
         if (rowView == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             rowView = inflater.inflate(R.layout.list_item, null);
-
 			
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.mTextView = (TextView) rowView.findViewById(R.id.list_item_text);
@@ -70,17 +69,14 @@ public class SingleAdapter extends BaseAdapter implements SelectedIndex {
 
         ViewHolder holder = (ViewHolder) rowView.getTag();
 		
-		if(TextUtils.isEmpty(mList.get(position).getVideoUrl()))
+		String quality = mList.get(position).getQuality();
+		
+		if(!quality.contains("p"))
 		{
-			holder.mTextView.setAlpha(0.5f);
-			holder.mRadioButton.setAlpha(0.5f);
-		}else
-		{
-			holder.mTextView.setAlpha(1);
-			holder.mRadioButton.setAlpha(1);
+			quality = quality + "p";
 		}
 		
-		holder.mTextView.setText(mList.get(position).getQuality());
+		holder.mTextView.setText(quality);
 		
 		if (mSelectedIndex == position) {
 			holder.mRadioButton.setChecked(true);
@@ -88,23 +84,7 @@ public class SingleAdapter extends BaseAdapter implements SelectedIndex {
 			holder.mRadioButton.setChecked(false);
 		}
 		
-		
-		
         return rowView;
     }
-
-	@Override
-	public boolean isEnabled(int position)
-	{
-		if(TextUtils.isEmpty(mList.get(position).getVideoUrl()))
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
-		
-	}
-    
+  
 }

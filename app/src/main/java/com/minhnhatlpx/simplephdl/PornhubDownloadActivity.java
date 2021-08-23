@@ -114,21 +114,22 @@ public class PornhubDownloadActivity extends Activity
 			sendRequest(PORNHUB_URL);
 
         } else {
+			
             finish();
+			
         }
 	}
 	
 	//Networking task, like AsyncTask but I hate AsyncTask so I using this :))
-	private void sendRequest(String url)
+	private void sendRequest(final String url)
 	{
 		new Thread()
 		{
 			public void run()
 			{
-				final String html = HttpRetriever.retrieve(PORNHUB_URL);
+				final String html = HttpRetriever.retrieve(url);
 				
 				pornhubList = PornhubParser.getGeneralList(html);
-				
 				
 				if(html!=null)
 				{
@@ -168,9 +169,9 @@ public class PornhubDownloadActivity extends Activity
 	private void listView()
 	{
 		
-		if(pornhubList.size() <=0)
+		if(pornhubList.size() <= 0)
 		{
-			MyUtils.showToast(this, "No content for download !");
+			MyUtils.showToast(this, "Cannot found any video URL !");
 			finish();
 		}else{
 			adapter = new SingleAdapter(this, pornhubList);

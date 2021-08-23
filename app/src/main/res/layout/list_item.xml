@@ -10,6 +10,7 @@
         android:layout_toLeftOf="@+id/list_item_check_button"
         android:gravity="left"
 		android:textSize="18sp"
+		android:textAllCaps="true"
 		android:textColor="@color/colorAccent"
 		android:layout_centerVertical="true"
 		android:textStyle="bold"

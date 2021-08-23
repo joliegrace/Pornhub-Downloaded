@@ -2,10 +2,11 @@ package com.minhnhatlpx.simplephdl;
 import org.json.*;
 import java.util.regex.*;
 import java.util.*;
+import android.util.*;
 
 public class PornhubParser
 {
-	public static List<General> getGeneralList(String html)
+	public static List<General> getGeneralList(String html) 
 	{
 		List<General> list = new ArrayList<>();
 		
@@ -16,9 +17,29 @@ public class PornhubParser
 		JSONObject flashvars_jsonObject;
 		JSONArray qualityItems_jsonArray;
 		
+	    p_var = Pattern.compile("var\\s+flashvars_\\d+\\s*=\\s*(.+?);");
+
+		matcher = p_var.matcher(html);
+		while( matcher.find() )
+		{
+			json = matcher.group(1);
+		}
+
 		try
 		{
-			p_var = Pattern.compile("var\\s+flashvars_\\d+\\s*=\\s*(.+?);");
+			flashvars_jsonObject = new JSONObject(json);
+
+			list = OfFlashvars(flashvars_jsonObject);
+			
+		} catch(JSONException e)
+		{
+			e.printStackTrace();
+		}
+		
+		Log.i("CaiDitMeMay", String.valueOf(list.size()));
+		if(list.size() <= 0)
+		{
+			p_var = Pattern.compile("var\\s+qualityItems_\\d+\\s*=\\s*(.+?);");
 
 			matcher = p_var.matcher(html);
 			while( matcher.find() )
@@ -26,30 +47,16 @@ public class PornhubParser
 				json = matcher.group(1);
 			}
 
-
-			flashvars_jsonObject = new JSONObject(json);
-
-			list = OfFlashvars(flashvars_jsonObject);
-			
-			if(list.size() < 0 || list.isEmpty())
+			try
 			{
-				p_var = Pattern.compile("var\\s+qualityItems_\\d+\\s*=\\s*(.+?);");
-
-				matcher = p_var.matcher(html);
-				while( matcher.find() )
-				{
-					json = matcher.group(1);
-				}
-				
 				qualityItems_jsonArray = new JSONArray(json);
-				
+
 				list = OfQualityItems(qualityItems_jsonArray);
-				
+			} catch(JSONException e)
+			{
+				e.printStackTrace();
 			}
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
+			
 		}
 			
 		return list;
@@ -83,7 +90,10 @@ public class PornhubParser
 					String videoUrl = videoUrl_jsonObject.getString("videoUrl");
 					String quality = videoUrl_jsonObject.getString("quality");
 					
-					list.add(new General(format, videoUrl, quality));
+					if(!videoUrl.isEmpty())
+					{
+						list.add(new General(format, videoUrl, quality));
+					}
 				}
 			}
 		}
@@ -93,7 +103,9 @@ public class PornhubParser
 		}
 		return list;
 	}
-	public static List<General>  OfQualityItems(JSONArray jsonArray)
+	
+	
+	public static List<General> OfQualityItems(JSONArray jsonArray)
 	{
 		List<General> list = new ArrayList<>();
 		
@@ -104,10 +116,13 @@ public class PornhubParser
 				JSONObject jsonObject = jsonArray.getJSONObject(i);
 				
 				String text = jsonObject.getString("text");
-				
 				String url = jsonObject.getString("url");
 				
-				list.add(new General("MP4",url, text));
+				if(!url.isEmpty())
+				{
+					list.add(new General("MP4", url, text));
+				}
+				
 			}
 			catch (JSONException e)
 			{
