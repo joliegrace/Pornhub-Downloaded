@@ -49,7 +49,11 @@ public class PornhubParser
 
 			try
 			{
-				qualityItems_jsonArray = new JSONArray(json);
+				//Some time json include invalid values got 'Unterminated string at character'
+				String json_split = json.replaceAll("(?is)<iframe src=\"(.+?)</iframe>","")
+					                    .replaceAll("(?is)<span class=\"(.+?)</span>","");
+				
+				qualityItems_jsonArray = new JSONArray(json_split);
 
 				list = OfQualityItems(qualityItems_jsonArray);
 			} catch(JSONException e)
@@ -58,7 +62,7 @@ public class PornhubParser
 			}
 			
 		}
-			
+			  
 		return list;
 	}
 	
