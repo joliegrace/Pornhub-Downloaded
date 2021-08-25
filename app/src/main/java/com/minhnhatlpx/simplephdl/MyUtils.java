@@ -16,7 +16,7 @@ public class MyUtils
 	
 	public static String removeBackSlash(String str)
 	{
-		return str.replaceAll("\\","");
+		return str.replaceAll("\\\\","");
 	}
 	
 	public static void downloadFile(Context context,String url, String fileName)

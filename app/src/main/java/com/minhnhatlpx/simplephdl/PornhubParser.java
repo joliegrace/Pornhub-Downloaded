@@ -17,8 +17,7 @@ public class PornhubParser
 		JSONObject flashvars_jsonObject;
 		JSONArray qualityItems_jsonArray;
 		
-	    p_var = Pattern.compile("var\\s+flashvars_\\d+\\s*=\\s*(.+?);");
-
+		p_var = Pattern.compile("var\\s+flashvars_\\d+\\s*=\\s*(.+?)\\};"); 
 		matcher = p_var.matcher(html);
 		while( matcher.find() )
 		{
@@ -27,9 +26,11 @@ public class PornhubParser
 
 		try
 		{
-			//Some time json include invalid values got 'Unterminated string at character'
+			//Sometime json include invalid values got 'Unterminated string at character'
+			json = MyUtils.removeBackSlash(json);
+			
 			String json_split = json.replaceAll("(?is)<iframe src=\"(.+?)</iframe>","")
-				                    .replaceAll("(?is)<span class=\"(.+?)</span>","");
+				                                            .replaceAll("(?is)<span class=\"(.+?)</span>","") + "}";
 			
 			flashvars_jsonObject = new JSONObject(json_split);
 
@@ -40,11 +41,10 @@ public class PornhubParser
 			e.printStackTrace();
 		}
 		
-		Log.i("CaiDitMeMay", String.valueOf(list.size()));
 		if(list.isEmpty())
 		{
 			p_var = Pattern.compile("var\\s+qualityItems_\\d+\\s*=\\s*(.+?);");
-
+			
 			matcher = p_var.matcher(html);
 			while( matcher.find() )
 			{
