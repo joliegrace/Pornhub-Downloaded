@@ -169,7 +169,7 @@ public class PornhubDownloadActivity extends Activity
 	private void listView()
 	{
 		
-		if(pornhubList.size() <= 0)
+		if(pornhubList.isEmpty())
 		{
 			MyUtils.showToast(this, "Cannot found any video URL !");
 			finish();

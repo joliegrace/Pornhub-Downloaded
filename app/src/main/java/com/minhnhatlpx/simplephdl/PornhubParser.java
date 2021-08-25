@@ -27,7 +27,11 @@ public class PornhubParser
 
 		try
 		{
-			flashvars_jsonObject = new JSONObject(json);
+			//Some time json include invalid values got 'Unterminated string at character'
+			String json_split = json.replaceAll("(?is)<iframe src=\"(.+?)</iframe>","")
+				                    .replaceAll("(?is)<span class=\"(.+?)</span>","");
+			
+			flashvars_jsonObject = new JSONObject(json_split);
 
 			list = OfFlashvars(flashvars_jsonObject);
 			
@@ -37,7 +41,7 @@ public class PornhubParser
 		}
 		
 		Log.i("CaiDitMeMay", String.valueOf(list.size()));
-		if(list.size() <= 0)
+		if(list.isEmpty())
 		{
 			p_var = Pattern.compile("var\\s+qualityItems_\\d+\\s*=\\s*(.+?);");
 
@@ -49,11 +53,7 @@ public class PornhubParser
 
 			try
 			{
-				//Some time json include invalid values got 'Unterminated string at character'
-				String json_split = json.replaceAll("(?is)<iframe src=\"(.+?)</iframe>","")
-					                    .replaceAll("(?is)<span class=\"(.+?)</span>","");
-				
-				qualityItems_jsonArray = new JSONArray(json_split);
+				qualityItems_jsonArray = new JSONArray(json);
 
 				list = OfQualityItems(qualityItems_jsonArray);
 			} catch(JSONException e)
@@ -108,7 +108,7 @@ public class PornhubParser
 		return list;
 	}
 	
-	
+	//this is plan B if plan A(method OfFlashvars) failed =))) 
 	public static List<General> OfQualityItems(JSONArray jsonArray)
 	{
 		List<General> list = new ArrayList<>();
