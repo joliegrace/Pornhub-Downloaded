@@ -30,7 +30,8 @@ public class PornhubParser
 			json = MyUtils.removeBackSlash(json);
 			
 			String json_split = json.replaceAll("(?is)<iframe src=\"(.+?)</iframe>","")
-				                                            .replaceAll("(?is)<span class=\"(.+?)</span>","") + "}";
+				                .replaceAll("(?is)<span class=\"(.+?)</span>","")
+                                                .replaceAll("(?is)<a href=\"(.+?)</a>","") + "}";
 			
 			flashvars_jsonObject = new JSONObject(json_split);
 
