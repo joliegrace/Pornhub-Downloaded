@@ -15,7 +15,7 @@ public class PornhubParser
 		
 		String json = null;
 		JSONObject flashvars_jsonObject;
-		JSONArray qualityItems_jsonArray;
+		//JSONArray qualityItems_jsonArray;
 		
 		p_var = Pattern.compile("var\\s+flashvars_\\d+\\s*=\\s*(.+?)\\};"); 
 		matcher = p_var.matcher(html);
@@ -41,28 +41,28 @@ public class PornhubParser
 		{
 			e.printStackTrace();
 		}
-		
-		if(list.isEmpty())
-		{
-			p_var = Pattern.compile("var\\s+qualityItems_\\d+\\s*=\\s*(.+?);");
-			
-			matcher = p_var.matcher(html);
-			while( matcher.find() )
-			{
-				json = matcher.group(1);
-			}
-
-			try
-			{
-				qualityItems_jsonArray = new JSONArray(json);
-
-				list = OfQualityItems(qualityItems_jsonArray);
-			} catch(JSONException e)
-			{
-				e.printStackTrace();
-			}
-			
-		}
+		//Nothing var qualityItems anymore :)
+//		if(list.isEmpty())
+//		{
+//			p_var = Pattern.compile("var\\s+qualityItems_\\d+\\s*=\\s*(.+?);");
+//			
+//			matcher = p_var.matcher(html);
+//			while( matcher.find() )
+//			{
+//				json = matcher.group(1);
+//			}
+//
+//			try
+//			{
+//				qualityItems_jsonArray = new JSONArray(json);
+//
+//				list = OfQualityItems(qualityItems_jsonArray);
+//			} catch(JSONException e)
+//			{
+//				e.printStackTrace();
+//			}
+//			
+//		}
 			  
 		return list;
 	}
@@ -76,10 +76,17 @@ public class PornhubParser
 		try
 		{
 			JSONArray mediaDefinitions = jsonObject.getJSONArray("mediaDefinitions");
-			//We need MP4 format, not HLS so index 0 is MP4 format and we get it
-			JSONObject media_0 = mediaDefinitions.getJSONObject(0);
+			String md_videoUrl = null;
+			for(int i = 0; i<mediaDefinitions.length(); i++)
+			{
+				JSONObject media = mediaDefinitions.getJSONObject(i);
+				
+				if(media.getString("format").equals("mp4"))
+				{
+					md_videoUrl = media.getString("videoUrl");
+				}
+			}
 			
-			String md_videoUrl = media_0.getString("videoUrl");
 			
 			if(md_videoUrl != null || !md_videoUrl.isEmpty())
 			{
@@ -110,33 +117,35 @@ public class PornhubParser
 	}
 	
 	//this is plan B if plan A(method OfFlashvars) failed =))) 
-	public static List<General> OfQualityItems(JSONArray jsonArray)
-	{
-		List<General> list = new ArrayList<>();
-		
-		for(int i = 0; i<jsonArray.length(); i++)
-		{
-			try
-			{
-				JSONObject jsonObject = jsonArray.getJSONObject(i);
-				
-				String text = jsonObject.getString("text");
-				String url = jsonObject.getString("url");
-				
-				if(!url.isEmpty())
-				{
-					list.add(new General("MP4", url, text));
-				}
-				
-			}
-			catch (JSONException e)
-			{
-				e.printStackTrace();
-			}
-		}
-		
-		return list;
-	}
+	
+	//nothing var qualityItems anymore :)
+//	public static List<General> OfQualityItems(JSONArray jsonArray)
+//	{
+//		List<General> list = new ArrayList<>();
+//		
+//		for(int i = 0; i<jsonArray.length(); i++)
+//		{
+//			try
+//			{
+//				JSONObject jsonObject = jsonArray.getJSONObject(i);
+//				
+//				String text = jsonObject.getString("text");
+//				String url = jsonObject.getString("url");
+//				
+//				if(!url.isEmpty())
+//				{
+//					list.add(new General("MP4", url, text));
+//				}
+//				
+//			}
+//			catch (JSONException e)
+//			{
+//				e.printStackTrace();
+//			}
+//		}
+//		
+//		return list;
+//	}
 	
 	
 }
